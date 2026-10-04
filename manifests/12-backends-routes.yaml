@@ -1,0 +1,78 @@
+# Backends tell the gateway where traffic goes; HTTPRoutes attach them to the
+# Gateway. No security policy yet: this is the "before" state.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: llm-provider-key
+  namespace: agentic-lab
+stringData:
+  # PROTECT: the provider key lives in the gateway's namespace, never in an agent.
+  Authorization: sk-lab-provider-key-held-by-gateway
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: llm
+  namespace: agentic-lab
+  labels: {owner: agentic-lab}
+spec:
+  ai:
+    provider:
+      openai:
+        model: mock-model
+      host: mock-llm.agentic-lab.svc.cluster.local
+      port: 8000
+  policies:
+    auth:
+      secretRef:
+        name: llm-provider-key
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: mcp-tools
+  namespace: agentic-lab
+  labels: {owner: clyde}
+spec:
+  mcp:
+    targets:
+    - name: everything
+      static:
+        host: mcp-everything.agentic-lab.svc.cluster.local
+        port: 3001
+        path: /mcp
+        protocol: StreamableHTTP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: llm
+  namespace: agentic-lab
+spec:
+  parentRefs:
+  - name: agentgateway-proxy
+    namespace: agentgateway-system
+  rules:
+  - matches:
+    - path: {type: PathPrefix, value: /v1}
+    backendRefs:
+    - group: agentgateway.dev
+      kind: AgentgatewayBackend
+      name: llm
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: mcp
+  namespace: agentic-lab
+spec:
+  parentRefs:
+  - name: agentgateway-proxy
+    namespace: agentgateway-system
+  rules:
+  - matches:
+    - path: {type: PathPrefix, value: /mcp}
+    backendRefs:
+    - group: agentgateway.dev
+      kind: AgentgatewayBackend
+      name: mcp-tools

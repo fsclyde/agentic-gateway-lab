@@ -1,0 +1,19 @@
+# PROTECT: each agent identity gets its own budget, so one runaway agent cannot
+# exhaust the model for everyone else.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: llm-rate-limit
+  namespace: agentic-lab
+  labels: {csf-function: protect, owner: agentic-lab}
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: llm
+  traffic:
+    rateLimit:
+      local:
+      - requests: 5
+        unit: Minutes
+        key: jwt.sub

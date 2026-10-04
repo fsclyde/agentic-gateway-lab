@@ -1,0 +1,22 @@
+# The Gateway is the single policy point. Applying it makes the controller
+# create the agentgateway-proxy Deployment and Service.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: agentgateway-proxy
+  namespace: agentgateway-system
+  labels:
+    owner: agentic-lab
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      namespaces:
+        # GOVERN: only namespaces that were explicitly labelled may publish routes.
+        from: Selector
+        selector:
+          matchLabels:
+            agentgateway-access: "true"

@@ -1,0 +1,21 @@
+# PROTECT: which agent may use which tool. Tools that match no rule are hidden
+# from tools/list and rejected on tools/call. get-env matches nothing, so no
+# agent can reach it.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: mcp-tool-rules
+  namespace: agentic-lab
+  labels: {csf-function: protect, owner: agentic-lab}
+spec:
+  targetRefs:
+  - group: agentgateway.dev
+    kind: AgentgatewayBackend
+    name: mcp-tools
+  backend:
+    mcp:
+      authorization:
+        action: Allow
+        policy:
+          matchExpressions:
+          - 'mcp.tool.name == "echo" || (jwt.sub == "orchestrator" && mcp.tool.name == "get-sum")'

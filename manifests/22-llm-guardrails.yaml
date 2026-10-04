@@ -1,0 +1,32 @@
+# PROTECT: inspect what goes to the model and what comes back.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: llm-guardrails
+  namespace: agentic-lab
+  labels: {csf-function: protect, owner: agentic-lab}
+spec:
+  targetRefs:
+  - group: agentgateway.dev
+    kind: AgentgatewayBackend
+    name: llm
+  backend:
+    ai:
+      promptGuard:
+        request:
+        - regex:
+            action: Reject
+            matches:
+            - 'AKIA[0-9A-Z]{16}'      # AWS access key id
+            builtins:
+            - CreditCard
+          response:
+            message: "Blocked by gateway: the prompt contains a secret or card number."
+            statusCode: 403
+        response:
+        - regex:
+            action: Mask
+            matches:
+            - 'AKIA[0-9A-Z]{16}'
+            builtins:
+            - Email

@@ -1,0 +1,25 @@
+# RESPOND: containment. Apply this when the "worker" agent is considered
+# compromised. It is refused on every route, without touching other agents.
+# Remove it again with: kubectl delete -f manifests/30-respond-block-worker.yaml
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: incident-block-worker
+  namespace: agentic-lab
+  labels: {csf-function: respond, owner: agentic-lab}
+  annotations:
+    incident: "LAB-001"
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: llm
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: mcp
+  traffic:
+    authorization:
+      action: Deny
+      policy:
+        matchExpressions:
+        - 'jwt.sub == "worker"'

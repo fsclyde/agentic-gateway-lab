@@ -1,0 +1,9 @@
+# Workloads and routes for the lab live here. The label is what lets routes in
+# this namespace attach to the Gateway (see 01-gateway.yaml).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agentic-lab
+  labels:
+    agentgateway-access: "true"
+    owner: agentic-lab

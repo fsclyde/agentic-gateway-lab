@@ -1,0 +1,46 @@
+# The MCP reference server ("everything"). It exposes harmless tools (echo,
+# get-sum) and a sensitive one (get-env, which returns the server's environment
+# variables). GOVERN: the package version is pinned.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-everything
+  namespace: agentic-lab
+  labels: {app: mcp-everything, owner: agentic-lab}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: mcp-everything}
+  template:
+    metadata:
+      labels: {app: mcp-everything}
+    spec:
+      containers:
+      - name: mcp
+        image: node:22-alpine
+        command: ["npx", "-y", "@modelcontextprotocol/server-everything@2026.8.31", "streamableHttp"]
+        env:
+        - {name: PORT, value: "3001"}
+        - {name: HOME, value: /tmp}
+        - {name: DEMO_DB_PASSWORD, value: "s3cr3t-do-not-leak"}   # what get-env would expose
+        ports:
+        - containerPort: 3001
+        readinessProbe:
+          tcpSocket: {port: 3001}
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-everything
+  namespace: agentic-lab
+spec:
+  selector: {app: mcp-everything}
+  ports:
+  - port: 3001
+    targetPort: 3001
