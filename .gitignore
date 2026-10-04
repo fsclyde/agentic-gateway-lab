@@ -1,5 +1,4 @@
 # GOVERN: the signing key never goes into Git. jwks.json is public and may be committed.
-keys/private.pem
-keys/kid
+keys/*
 __pycache__/
 .DS_Store
