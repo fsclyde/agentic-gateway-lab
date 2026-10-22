@@ -6,6 +6,7 @@ kind: ConfigMap
 metadata:
   name: mock-llm
   namespace: agentic-lab
+  team: platform
 data:
   mock_llm.py: |
     """Tiny OpenAI-compatible stand-in so the lab needs no API key and no GPU."""

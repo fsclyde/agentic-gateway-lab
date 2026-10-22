@@ -14,7 +14,9 @@ kind: AgentgatewayBackend
 metadata:
   name: llm
   namespace: agentic-lab
-  labels: {owner: agentic-lab}
+  labels: 
+    owner: agentic-lab
+    team: platform
 spec:
   ai:
     provider:

@@ -6,7 +6,7 @@ kind: Deployment
 metadata:
   name: mcp-everything
   namespace: agentic-lab
-  labels: {app: mcp-everything, owner: agentic-lab}
+  labels: {app: mcp-everything, owner: agentic-lab, team: platform}
 spec:
   replicas: 1
   selector:

@@ -4,7 +4,7 @@ kind: AgentgatewayPolicy
 metadata:
   name: llm-guardrails
   namespace: agentic-lab
-  labels: {csf-function: protect, owner: agentic-lab}
+  labels: {csf-function: protect, owner: agentic-lab, team: cloud-securtiy}
 spec:
   targetRefs:
   - group: agentgateway.dev

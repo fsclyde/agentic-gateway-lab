@@ -6,7 +6,7 @@ kind: AgentgatewayPolicy
 metadata:
   name: incident-block-worker
   namespace: agentic-lab
-  labels: {csf-function: respond, owner: agentic-lab}
+  labels: {csf-function: respond, owner: agentic-lab, team: cloud-security}
   annotations:
     incident: "LAB-001"
 spec:

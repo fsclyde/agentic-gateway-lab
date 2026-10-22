@@ -5,7 +5,7 @@ kind: AgentgatewayPolicy
 metadata:
   name: llm-rate-limit
   namespace: agentic-lab
-  labels: {csf-function: protect, owner: agentic-lab}
+  labels: {csf-function: protect, owner: agentic-lab, team: cloud-security}
 spec:
   targetRefs:
   - group: gateway.networking.k8s.io

@@ -9,10 +9,10 @@
 |---|---|---|---|
 | agentgateway proxy and controller | `agentgateway-system` | platform | High: every call passes through it |
 | LLM provider key | Secret `llm-provider-key` | platform | High |
-| Token signing key | `keys/private.pem` on the laptop | identity | High |
-| MCP server `everything` | `agentic-lab` | tools team | Medium: `get-env` exposes its environment |
+| Token signing key | `keys/private.pem` on the laptop | IAM Team | High |
+| MCP server `everything` | `agentic-lab` | cloud team | Medium: `get-env` exposes its environment |
 | Mock LLM | `agentic-lab` | platform | Low |
-| Agent identities | `orchestrator`, `worker` (JWT `sub`) | agent owners | Medium |
+| Agent identities | `orchestrator`, `worker` (JWT `sub`) | IAM Team | Medium |
 
 ## Threats and controls
 

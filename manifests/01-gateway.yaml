@@ -7,6 +7,7 @@ metadata:
   namespace: agentgateway-system
   labels:
     owner: agentic-lab
+    team: platform
 spec:
   gatewayClassName: agentgateway
   listeners:
